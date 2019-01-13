@@ -2,9 +2,13 @@ package _03_To_Do_List;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -63,6 +67,22 @@ public class ToDoList implements ActionListener {
 		frame.pack();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		try {
+			BufferedReader fr = new BufferedReader(new FileReader("src/_03_To_Do_List/WriterStorage"));
+			String temp;
+			try {
+				temp = fr.readLine();
+				list = new ArrayList<String>(Arrays.asList(temp.split(",")));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 	}
 
@@ -91,11 +111,40 @@ public class ToDoList implements ActionListener {
 				try {
 					FileWriter fw = new FileWriter(fileName);
 					fw.write(list.toString());
+					FileWriter fw2 = new FileWriter("src/_03_To_Do_List/WriterStorage");
+					fw2.write(list.toString());
+					fw.close();
+					fw2.close();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
+		}
+		if (source.getText() == "Load Task List") {
+			
+			
+			JFileChooser jfc = new JFileChooser();
+			int returnVal = jfc.showOpenDialog(null);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				String fileName = jfc.getSelectedFile().getAbsolutePath();
+				try {
+					BufferedReader fr = new BufferedReader(new FileReader(fileName));
+					String temp;
+					try {
+						temp = fr.readLine();
+						list = new ArrayList<String>(Arrays.asList(temp.split(", ")));
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+				
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
 		}
 	}
 
